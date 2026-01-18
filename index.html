@@ -1,0 +1,181 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Prime Cardiology Kiosk</title>
+
+<style>
+body {
+  font-family: -apple-system, Arial;
+  margin: 0;
+  padding: 24px;
+  background: #f6f8fb;
+}
+h1 { font-size: 28px; margin: 0 0 18px; }
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+a.btn {
+  display: block;
+  text-decoration: none;
+  text-align: center;
+  padding: 20px 16px;
+  border-radius: 16px;
+  font-size: 22px;
+  font-weight: 600;
+  background: white;
+  border: 2px solid #111;
+  color: #000;
+}
+
+a.btn:active {
+  background: #e9eef5;
+  transform: scale(0.98);
+}
+
+.note {
+  margin-top: 18px;
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.langbar{
+  margin-top: 14px;
+  display:flex;
+  justify-content:flex-end;
+}
+.langtoggle{
+  font-size: 12px;
+  opacity: 0.75;
+  background: transparent;
+  border: 1px solid #bbb;
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+.langtoggle:active{
+  opacity: 1;
+  transform: scale(0.98);
+}
+</style>
+
+<script>
+let kioskTimer;
+let currentLang = "es";
+
+// 3 minutos
+const IDLE_MS = 180000;
+
+function goHome() {
+  // Regresa al home en español SIN recargar (más estable en iPad/kiosk)
+  applyLanguage("es");
+  window.scrollTo(0, 0);
+}
+
+function resetKioskTimer() {
+  clearTimeout(kioskTimer);
+  kioskTimer = setTimeout(goHome, IDLE_MS);
+}
+
+window.addEventListener("load", resetKioskTimer);
+document.addEventListener("touchstart", resetKioskTimer, { passive: true });
+document.addEventListener("click", resetKioskTimer);
+document.addEventListener("keydown", resetKioskTimer);
+document.addEventListener("mousemove", resetKioskTimer);
+
+const content = {
+  es: {
+    header: "Prime Cardiology – Check-In",
+    note: "Si selecciona una opción incorrecta, presione el botón “Atrás” para volver.",
+    buttons: [
+      {
+        label: "Hoja de Registro",
+        url: "https://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fmyupdox.com%2Fform-dashboard%2Ff%2Fd96a54c3-eaca-49ea-a0f2-de848a7af788&data=05%7C02%7C%7Cd7599ced763e4634895208de5602a103%7C84df9e7fe9f640afb435aaaaaaaaaaaa%7C1%7C0%7C639042766440804646%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=5tmG1du8gyn5mQ73Udesa%2BRKyka59AaREEcKVNty95M%3D&reserved=0"
+      },
+      {
+        label: "Hoja Informativa del Paciente",
+        url: "https://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fmyupdox.com%2Fform-dashboard%2Ff%2F5b81db58-bddd-4091-b005-9904bb43da38&data=05%7C02%7C%7Cd7599ced763e4634895208de5602a103%7C84df9e7fe9f640afb435aaaaaaaaaaaa%7C1%7C0%7C639042766440847212%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=S31IqOoqaXGD0QdTKX0XMQvdAjKC5S%2BKx5QJ894bjWg%3D&reserved=0"
+      },
+      {
+        label: "Formulario de Registro de Paciente Nuevo",
+        url: "https://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fmyupdox.com%2Fform-dashboard%2Ff%2F5f51a387-6eeb-4939-9bdc-2a4eb050d28b&data=05%7C02%7C%7Cd7599ced763e4634895208de5602a103%7C84df9e7fe9f640afb435aaaaaaaaaaaa%7C1%7C0%7C639042766440881639%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=kpvOSQYd%2BYl9Vzxhy2jT3y9dMqDBhvhKvCho%2BegRvWU%3D&reserved=0"
+      },
+      {
+        label: "Acuerdos y Avisos para Pacientes Nuevos",
+        url: "https://myupdox.com/form-dashboard/p/c7d5ac80-d6a6-4448-87ed-fbbb68e00a47"
+      }
+    ],
+    toggleText: "English version"
+  },
+
+  en: {
+    header: "Prime Cardiology – Check-In",
+    note: "If the patient selects the wrong option, tap the Back button to return.",
+    buttons: [
+      {
+        label: "Registration Sheet",
+        url: "https://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fmyupdox.com%2Fform-dashboard%2Ff%2Fd96a54c3-eaca-49ea-a0f2-de848a7af788&data=05%7C02%7C%7Cd7599ced763e4634895208de5602a103%7C84df9e7fe9f640afb435aaaaaaaaaaaa%7C1%7C0%7C639042766440804646%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=5tmG1du8gyn5mQ73Udesa%2BRKyka59AaREEcKVNty95M%3D&reserved=0"
+      },
+      {
+        label: "Patient Information Sheet",
+        url: "https://myupdox.com/form-dashboard/f/3305c690-d462-497d-b688-301eaf7f653c#"
+      },
+      {
+        label: "New Patient Registration Form",
+        url: "https://myupdox.com/form-dashboard/f/a17a5904-4308-430c-a817-d14129ecc9d3#"
+      },
+      {
+        label: "New Patient Agreements & Notices",
+        url: "https://myupdox.com/form-dashboard/p/903ac092-9080-445c-9f8b-3ee2900ad825#"
+      }
+    ],
+    toggleText: "Versión en español"
+  }
+};
+
+function applyLanguage(lang){
+  currentLang = lang;
+
+  document.getElementById("title").textContent = content[lang].header;
+  document.getElementById("noteText").textContent = content[lang].note;
+
+  for(let i=0; i<4; i++){
+    const a = document.getElementById("btn"+(i+1));
+    a.textContent = content[lang].buttons[i].label;
+    a.href = content[lang].buttons[i].url;
+  }
+
+  document.getElementById("langToggle").textContent = content[lang].toggleText;
+}
+
+function toggleLanguage(){
+  applyLanguage(currentLang === "es" ? "en" : "es");
+  resetKioskTimer();
+}
+
+window.addEventListener("load", () => applyLanguage("es"));
+</script>
+
+</head>
+
+<body>
+<h1 id="title">Prime Cardiology – Check-In</h1>
+
+<div class="grid">
+  <a class="btn" id="btn1" href="#">Loading…</a>
+  <a class="btn" id="btn2" href="#">Loading…</a>
+  <a class="btn" id="btn3" href="#">Loading…</a>
+  <a class="btn" id="btn4" href="#">Loading…</a>
+</div>
+
+<div class="note" id="noteText">Loading…</div>
+
+<div class="langbar">
+  <button class="langtoggle" id="langToggle" type="button" onclick="toggleLanguage()">English version</button>
+</div>
+</body>
+</html>
